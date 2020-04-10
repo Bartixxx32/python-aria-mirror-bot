@@ -23,7 +23,8 @@ def start_cleanup():
 def exit_clean_up(signal, frame):
     try:
         LOGGER.info(
-            "Please wait, while we clean up the downloads and stop running downloads")
+            "Please wait, while we clean up the downloads and stop running downloads"
+        )
         aria2.remove_all(True)
         shutil.rmtree(DOWNLOAD_DIR)
         sys.exit(0)
@@ -46,7 +47,7 @@ def get_path_size(path):
 def tar(org_path):
     tar_path = org_path + ".tar"
     path = pathlib.PurePath(org_path)
-    LOGGER.info(f'Tar: orig_path: {org_path}, tar_path: {tar_path}')
+    LOGGER.info(f"Tar: orig_path: {org_path}, tar_path: {tar_path}")
     tar = tarfile.open(tar_path, "w")
     tar.add(org_path, arcname=path.name)
     tar.close()

@@ -15,29 +15,35 @@ from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clon
 @run_async
 def stats(bot, update):
     currentTime = get_readable_time((time.time() - botStartTime))
-    total, used, free = shutil.disk_usage('.')
+    total, used, free = shutil.disk_usage(".")
     total = get_readable_file_size(total)
     used = get_readable_file_size(used)
     free = get_readable_file_size(free)
-    stats = f'Bot Uptime: {currentTime}\n' \
-            f'Total disk space: {total}\n' \
-        f'Used: {used}\n' \
-        f'Free: {free}'
+    stats = (
+        f"Bot Uptime: {currentTime}\n"
+        f"Total disk space: {total}\n"
+        f"Used: {used}\n"
+        f"Free: {free}"
+    )
     sendMessage(stats, bot, update)
 
 
 @run_async
 def start(bot, update):
-    sendMessage("This is a bot which can mirror all your links to Google drive!\n"
-                "Type /help to get a list of available commands", bot, update)
+    sendMessage(
+        "This is a bot which can mirror all your links to Google drive!\n"
+        "Type /help to get a list of available commands",
+        bot,
+        update,
+    )
 
 
 @run_async
 def ping(bot, update):
     start_time = int(round(time.time() * 1000))
     reply = sendMessage("Starting Ping", bot, update)
-    end_time = int(round(time.time()*1000))
-    editMessage(f'{end_time - start_time} ms', reply)
+    end_time = int(round(time.time() * 1000))
+    editMessage(f"{end_time - start_time} ms", reply)
 
 
 @run_async
@@ -47,7 +53,7 @@ def log(bot, update):
 
 @run_async
 def bot_help(bot, update):
-    help_string = f'''
+    help_string = f"""
 /{BotCommands.HelpCommand}: To get this message
 
 /{BotCommands.MirrorCommand} [download_url][magnet_link]: Start mirroring the link to google drive
@@ -66,22 +72,35 @@ def bot_help(bot, update):
 
 /{BotCommands.LogCommand}: Get a log file of the bot. Handy for getting crash reports
 
-'''
+"""
     sendMessage(help_string, bot, update)
 
 
 def main():
     fs_utils.start_cleanup()
-    start_handler = CommandHandler(BotCommands.StartCommand, start,
-                                   filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
-    ping_handler = CommandHandler(BotCommands.PingCommand, ping,
-                                  filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
-    help_handler = CommandHandler(BotCommands.HelpCommand,
-                                  bot_help, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
-    stats_handler = CommandHandler(BotCommands.StatsCommand,
-                                   stats, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
+    start_handler = CommandHandler(
+        BotCommands.StartCommand,
+        start,
+        filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+    )
+    ping_handler = CommandHandler(
+        BotCommands.PingCommand,
+        ping,
+        filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+    )
+    help_handler = CommandHandler(
+        BotCommands.HelpCommand,
+        bot_help,
+        filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+    )
+    stats_handler = CommandHandler(
+        BotCommands.StatsCommand,
+        stats,
+        filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+    )
     log_handler = CommandHandler(
-        BotCommands.LogCommand, log, filters=CustomFilters.owner_filter)
+        BotCommands.LogCommand, log, filters=CustomFilters.owner_filter
+    )
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(ping_handler)
     dispatcher.add_handler(help_handler)
