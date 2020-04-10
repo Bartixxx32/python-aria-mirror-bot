@@ -1,6 +1,7 @@
-from bot import aria2, DOWNLOAD_DIR
-from bot.helper.ext_utils.bot_utils import MirrorStatus
 from .status import Status
+from bot import aria2
+from bot import DOWNLOAD_DIR
+from bot.helper.ext_utils.bot_utils import MirrorStatus
 
 
 def get_download(gid):
@@ -8,7 +9,6 @@ def get_download(gid):
 
 
 class AriaDownloadStatus(Status):
-
     def __init__(self, obj, listener):
         super().__init__()
         self.upload_name = None
@@ -66,7 +66,7 @@ class AriaDownloadStatus(Status):
             status = MirrorStatus.STATUS_CANCELLED
         elif download.has_failed:
             status = MirrorStatus.STATUS_FAILED
-            self.__listener.onDownloadError('Unknown Error')
+            self.__listener.onDownloadError("Unknown Error")
         else:
             status = MirrorStatus.STATUS_DOWNLOADING
         return status
@@ -77,7 +77,7 @@ class AriaDownloadStatus(Status):
 
     def download(self):
         return self.obj
-    
+
     def uid(self):
         return self.__uid
 

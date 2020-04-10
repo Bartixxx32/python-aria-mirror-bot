@@ -1,10 +1,14 @@
-import sys
-from bot import aria2, LOGGER, DOWNLOAD_DIR
-import shutil
 import os
 import pathlib
-import magic
+import shutil
+import sys
 import tarfile
+
+import magic
+
+from bot import aria2
+from bot import DOWNLOAD_DIR
+from bot import LOGGER
 
 
 def clean_download(path: str):
@@ -22,13 +26,16 @@ def start_cleanup():
 
 def exit_clean_up(signal, frame):
     try:
-        LOGGER.info("Please wait, while we clean up the downloads and stop running downloads")
+        LOGGER.info(
+            "Please wait, while we clean up the downloads and stop running downloads"
+        )
         aria2.remove_all(True)
         shutil.rmtree(DOWNLOAD_DIR)
         sys.exit(0)
     except KeyboardInterrupt:
         LOGGER.warning("Force Exiting before the cleanup finishes!")
         sys.exit(1)
+
 
 def get_path_size(path):
     if os.path.isfile(path):
@@ -44,7 +51,7 @@ def get_path_size(path):
 def tar(org_path):
     tar_path = org_path + ".tar"
     path = pathlib.PurePath(org_path)
-    LOGGER.info(f'Tar: orig_path: {org_path}, tar_path: {tar_path}')
+    LOGGER.info(f"Tar: orig_path: {org_path}, tar_path: {tar_path}")
     tar = tarfile.open(tar_path, "w")
     tar.add(org_path, arcname=path.name)
     tar.close()
