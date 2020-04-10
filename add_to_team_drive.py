@@ -31,16 +31,13 @@ parse.add_argument(
     default="./credentials.json",
     help="Specify the relative path for the credentials file.",
 )
-parse.add_argument("--yes",
-                   "-y",
-                   default=False,
-                   action="store_true",
-                   help="Skips the sanity prompt.")
+parse.add_argument(
+    "--yes", "-y", default=False, action="store_true", help="Skips the sanity prompt."
+)
 parsereq = parse.add_argument_group("required arguments")
-parsereq.add_argument("--drive-id",
-                      "-d",
-                      help="The ID of the Shared Drive.",
-                      required=True)
+parsereq.add_argument(
+    "--drive-id", "-d", help="The ID of the Shared Drive.", required=True
+)
 
 args = parse.parse_args()
 acc_dir = args.path
@@ -59,7 +56,8 @@ if not args.yes:
     # credentials[0],'r').read()))['installed']['client_id'])
     input(
         ">> Make sure the **Google account** that has generated credentials.json\n   is added into your Team Drive "
-        "(shared drive) as Manager\n>> (Press any key to continue)")
+        "(shared drive) as Manager\n>> (Press any key to continue)"
+    )
 
 creds = None
 if os.path.exists("token_sa.pickle"):
@@ -90,15 +88,13 @@ aa = glob.glob("%s/*.json" % acc_dir)
 pbar = progress.bar.Bar("Readying accounts", max=len(aa))
 for i in aa:
     ce = json.loads(open(i, "r").read())["client_email"]
-    batch.add(drive.permissions().create(
-        fileId=did,
-        supportsAllDrives=True,
-        body={
-            "role": "fileOrganizer",
-            "type": "user",
-            "emailAddress": ce
-        },
-    ))
+    batch.add(
+        drive.permissions().create(
+            fileId=did,
+            supportsAllDrives=True,
+            body={"role": "fileOrganizer", "type": "user", "emailAddress": ce},
+        )
+    )
     pbar.next()
 pbar.finish()
 print("Adding...")
@@ -107,5 +103,4 @@ batch.execute()
 print("Complete.")
 hours, rem = divmod((time.time() - stt), 3600)
 minutes, sec = divmod(rem, 60)
-print("Elapsed Time:\n{:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes),
-                                                     sec))
+print("Elapsed Time:\n{:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), sec))

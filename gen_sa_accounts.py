@@ -29,15 +29,14 @@ def _create_accounts(service, project, count):
     batch = service.new_batch_http_request(callback=_def_batch_resp)
     for i in range(count):
         aid = _generate_id("mfc-")
-        batch.add(service.projects().serviceAccounts().create(
-            name="projects/" + project,
-            body={
-                "accountId": aid,
-                "serviceAccount": {
-                    "displayName": aid
-                }
-            },
-        ))
+        batch.add(
+            service.projects()
+            .serviceAccounts()
+            .create(
+                name="projects/" + project,
+                body={"accountId": aid, "serviceAccount": {"displayName": aid}},
+            )
+        )
     batch.execute()
 
 
@@ -53,15 +52,12 @@ def _create_remaining_accounts(iam, project):
 # Generate a random id
 def _generate_id(prefix="saf-"):
     chars = "-abcdefghijklmnopqrstuvwxyz1234567890"
-    return prefix + "".join(choice(chars)
-                            for _ in range(25)) + choice(chars[1:])
+    return prefix + "".join(choice(chars) for _ in range(25)) + choice(chars[1:])
 
 
 # List projects using service
 def _get_projects(service):
-    return [
-        i["projectId"] for i in service.projects().list().execute()["projects"]
-    ]
+    return [i["projectId"] for i in service.projects().list().execute()["projects"]]
 
 
 # Default batch callback handler
@@ -108,15 +104,20 @@ def _enable_services(service, projects, ste):
     batch = service.new_batch_http_request(callback=_def_batch_resp)
     for i in projects:
         for j in ste:
-            batch.add(service.services().enable(
-                name="projects/%s/services/%s" % (i, j)))
+            batch.add(
+                service.services().enable(name="projects/%s/services/%s" % (i, j))
+            )
     batch.execute()
 
 
 # List SAs in project
 def _list_sas(iam, project):
-    resp = (iam.projects().serviceAccounts().list(name="projects/" + project,
-                                                  pageSize=100).execute())
+    resp = (
+        iam.projects()
+        .serviceAccounts()
+        .list(name="projects/" + project, pageSize=100)
+        .execute()
+    )
     if "accounts" in resp:
         return resp["accounts"]
     return []
@@ -131,10 +132,12 @@ def _batch_keys_resp(id, resp, exception):
     elif current_key_dump is None:
         sleep(sleep_time / 100)
     else:
-        current_key_dump.append((
-            resp["name"][resp["name"].rfind("/"):],
-            b64decode(resp["privateKeyData"]).decode("utf-8"),
-        ))
+        current_key_dump.append(
+            (
+                resp["name"][resp["name"].rfind("/") :],
+                b64decode(resp["privateKeyData"]).decode("utf-8"),
+            )
+        )
 
 
 # Create Keys
@@ -147,13 +150,18 @@ def _create_sa_keys(iam, projects, path):
             batch = iam.new_batch_http_request(callback=_batch_keys_resp)
             total_sas = _list_sas(iam, i)
             for j in total_sas:
-                batch.add(iam.projects().serviceAccounts().keys().create(
-                    name="projects/%s/serviceAccounts/%s" % (i, j["uniqueId"]),
-                    body={
-                        "privateKeyType": "TYPE_GOOGLE_CREDENTIALS_FILE",
-                        "keyAlgorithm": "KEY_ALG_RSA_2048",
-                    },
-                ))
+                batch.add(
+                    iam.projects()
+                    .serviceAccounts()
+                    .keys()
+                    .create(
+                        name="projects/%s/serviceAccounts/%s" % (i, j["uniqueId"]),
+                        body={
+                            "privateKeyType": "TYPE_GOOGLE_CREDENTIALS_FILE",
+                            "keyAlgorithm": "KEY_ALG_RSA_2048",
+                        },
+                    )
+                )
             batch.execute()
             if current_key_dump is None:
                 print("Redownloading keys from %s" % i)
@@ -176,18 +184,18 @@ def _delete_sas(iam, project):
 
 
 def serviceaccountfactory(
-        credentials="credentials.json",
-        token="token_sa.pickle",
-        path=None,
-        list_projects=False,
-        list_sas=None,
-        create_projects=None,
-        max_projects=12,
-        enable_services=None,
-        services=["iam", "drive"],
-        create_sas=None,
-        delete_sas=None,
-        download_keys=None,
+    credentials="credentials.json",
+    token="token_sa.pickle",
+    path=None,
+    list_projects=False,
+    list_sas=None,
+    create_projects=None,
+    max_projects=12,
+    enable_services=None,
+    services=["iam", "drive"],
+    create_sas=None,
+    delete_sas=None,
+    download_keys=None,
 ):
     selected_projects = []
     proj_id = loads(open(credentials, "r").read())["installed"]["project_id"]
@@ -199,8 +207,7 @@ def serviceaccountfactory(
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                credentials, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(credentials, SCOPES)
 
             # creds = flow.run_local_server(port=0)
             creds = flow.run_console()
@@ -217,12 +224,15 @@ def serviceaccountfactory(
         try:
             projs = _get_projects(cloud)
         except HttpError as e:
-            if (loads(e.content.decode("utf-8"))["error"]["status"] ==
-                    "PERMISSION_DENIED"):
+            if (
+                loads(e.content.decode("utf-8"))["error"]["status"]
+                == "PERMISSION_DENIED"
+            ):
                 try:
                     serviceusage.services().enable(
                         name="projects/%s/services/cloudresourcemanager.googleapis.com"
-                        % proj_id).execute()
+                        % proj_id
+                    ).execute()
                 except HttpError as e:
                     print(e._get_reason())
                     input("Press Enter to retry.")
@@ -244,10 +254,13 @@ def serviceaccountfactory(
                     "Please reduce value of --quick-setup.\n"
                     "Remember that you can totally create %d projects (%d already).\n"
                     "Please do not delete existing projects unless you know what you are doing"
-                    % (create_projects, max_projects, current_count))
+                    % (create_projects, max_projects, current_count)
+                )
         else:
-            print("Will overwrite all service accounts in existing projects.\n"
-                  "So make sure you have some projects already.")
+            print(
+                "Will overwrite all service accounts in existing projects.\n"
+                "So make sure you have some projects already."
+            )
             input("Press Enter to continue...")
 
     if enable_services:
@@ -297,17 +310,16 @@ def serviceaccountfactory(
 
 
 if __name__ == "__main__":
-    parse = ArgumentParser(
-        description="A tool to create Google service accounts.")
+    parse = ArgumentParser(description="A tool to create Google service accounts.")
     parse.add_argument(
         "--path",
         "-p",
         default="accounts",
         help="Specify an alternate directory to output the credential files.",
     )
-    parse.add_argument("--token",
-                       default="token_sa.pickle",
-                       help="Specify the pickle token file path.")
+    parse.add_argument(
+        "--token", default="token_sa.pickle", help="Specify the pickle token file path."
+    )
     parse.add_argument(
         "--credentials",
         default="credentials.json",
@@ -319,13 +331,12 @@ if __name__ == "__main__":
         action="store_true",
         help="List projects viewable by the user.",
     )
-    parse.add_argument("--list-sas",
-                       default=False,
-                       help="List service accounts in a project.")
-    parse.add_argument("--create-projects",
-                       type=int,
-                       default=None,
-                       help="Creates up to N projects.")
+    parse.add_argument(
+        "--list-sas", default=False, help="List service accounts in a project."
+    )
+    parse.add_argument(
+        "--create-projects", type=int, default=None, help="Creates up to N projects."
+    )
     parse.add_argument(
         "--max-projects",
         type=int,
@@ -343,12 +354,12 @@ if __name__ == "__main__":
         default=["iam", "drive"],
         help="Specify a different set of services to enable. Overrides the default.",
     )
-    parse.add_argument("--create-sas",
-                       default=None,
-                       help="Create service accounts in a project.")
-    parse.add_argument("--delete-sas",
-                       default=None,
-                       help="Delete service accounts in a project.")
+    parse.add_argument(
+        "--create-sas", default=None, help="Create service accounts in a project."
+    )
+    parse.add_argument(
+        "--delete-sas", default=None, help="Delete service accounts in a project."
+    )
     parse.add_argument(
         "--download-keys",
         default=None,
@@ -370,17 +381,17 @@ if __name__ == "__main__":
     # If credentials file is invalid, search for one.
     if not os.path.exists(args.credentials):
         options = glob("*.json")
-        print("No credentials found at %s. Please enable the Drive API in:\n"
-              "https://developers.google.com/drive/api/v3/quickstart/python\n"
-              "and save the json file as credentials.json" % args.credentials)
+        print(
+            "No credentials found at %s. Please enable the Drive API in:\n"
+            "https://developers.google.com/drive/api/v3/quickstart/python\n"
+            "and save the json file as credentials.json" % args.credentials
+        )
         if len(options) < 1:
             exit(-1)
         else:
             i = 0
             print("Select a credentials file below.")
-            inp_options = [str(i)
-                           for i in list(range(1,
-                                               len(options) + 1))] + options
+            inp_options = [str(i) for i in list(range(1, len(options) + 1))] + options
             while i < len(options):
                 print("  %d) %s" % (i + 1, options[i]))
                 i += 1
@@ -395,7 +406,8 @@ if __name__ == "__main__":
                 args.credentials = options[int(inp) - 1]
             print(
                 "Use --credentials %s next time to use this credentials file."
-                % args.credentials)
+                % args.credentials
+            )
     if args.quick_setup:
         opt = "*"
         if args.new_only:
@@ -429,8 +441,7 @@ if __name__ == "__main__":
                 print("No projects.")
         elif args.list_sas:
             if resp:
-                print("Service accounts in %s (%d):" %
-                      (args.list_sas, len(resp)))
+                print("Service accounts in %s (%d):" % (args.list_sas, len(resp)))
                 for i in resp:
                     print("  %s (%s)" % (i["email"], i["uniqueId"]))
             else:

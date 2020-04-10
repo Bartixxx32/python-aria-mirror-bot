@@ -18,11 +18,14 @@ from bot.helper.ext_utils.bot_utils import setInterval
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException
 from bot.helper.mirror_utils.download_utils import aria2_download
 from bot.helper.mirror_utils.download_utils.direct_link_generator import (
-    direct_link_generator, )
+    direct_link_generator,
+)
 from bot.helper.mirror_utils.download_utils.telegram_downloader import (
-    TelegramDownloadHelper, )
+    TelegramDownloadHelper,
+)
 from bot.helper.mirror_utils.download_utils.youtube_dl_download_helper import (
-    YoutubeDLHelper, )
+    YoutubeDLHelper,
+)
 from bot.helper.mirror_utils.status_utils import listeners
 from bot.helper.mirror_utils.status_utils.tar_status import TarStatus
 from bot.helper.mirror_utils.status_utils.upload_status import UploadStatus
@@ -52,8 +55,7 @@ class MirrorListener(listeners.MirrorListeners):
 
     def onDownloadComplete(self):
         with download_dict_lock:
-            LOGGER.info(
-                f"Download completed: {download_dict[self.uid].name()}")
+            LOGGER.info(f"Download completed: {download_dict[self.uid].name()}")
             download = download_dict[self.uid]
             name = download.name()
             size = download.size_raw()
@@ -118,9 +120,10 @@ class MirrorListener(listeners.MirrorListeners):
             LOGGER.info(f"Done Uploading {download_dict[self.uid].name()}")
             if INDEX_URL is not None:
                 share_url = requests.utils.requote_uri(
-                    f"{INDEX_URL}/{download_dict[self.uid].name()}")
+                    f"{INDEX_URL}/{download_dict[self.uid].name()}"
+                )
                 if os.path.isdir(
-                        f"{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}"
+                    f"{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}"
                 ):
                     share_url += "/"
                 msg += f'\n\n Shareable link: <a href="{share_url}">here</a>'
@@ -139,8 +142,7 @@ class MirrorListener(listeners.MirrorListeners):
             update_all_messages()
 
     def onUploadError(self, error):
-        e_str = str(error.last_attempt.exception()).replace("<", "").replace(
-            ">", "")
+        e_str = str(error.last_attempt.exception()).replace("<", "").replace(">", "")
         with download_dict_lock:
             try:
                 fs_utils.clean_download(download_dict[self.uid].path())
@@ -179,12 +181,15 @@ def _mirror(bot, update, isTar=False):
                     listener = MirrorListener(bot, update, isTar, tag)
                     tg_downloader = TelegramDownloadHelper(listener)
                     tg_downloader.add_download(
-                        reply_to, f"{DOWNLOAD_DIR}{listener.uid}/")
+                        reply_to, f"{DOWNLOAD_DIR}{listener.uid}/"
+                    )
                     sendStatusMessage(update, bot)
                     if len(Interval) == 0:
                         Interval.append(
-                            setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL,
-                                        update_all_messages))
+                            setInterval(
+                                DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages
+                            )
+                        )
                     return
                 else:
                     link = file.get_file().file_path
@@ -212,7 +217,8 @@ def _mirror(bot, update, isTar=False):
     sendStatusMessage(update, bot)
     if len(Interval) == 0:
         Interval.append(
-            setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))
+            setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages)
+        )
 
 
 @run_async
