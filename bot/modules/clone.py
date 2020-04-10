@@ -7,17 +7,19 @@ from bot import dispatcher
 
 
 @run_async
-def cloneNode(bot,update):
-    args = update.message.text.split(" ",maxsplit=1)
+def cloneNode(bot, update):
+    args = update.message.text.split(" ", maxsplit=1)
     if len(args) > 1:
         link = args[1]
-        msg = sendMessage(f"Cloning: <code>{link}</code>",bot,update)
+        msg = sendMessage(f"Cloning: <code>{link}</code>", bot, update)
         gd = GoogleDriveHelper()
         result = gd.clone(link)
-        deleteMessage(bot,msg)
-        sendMessage(result,bot,update)
+        deleteMessage(bot, msg)
+        sendMessage(result, bot, update)
     else:
-        sendMessage("Provide G-Drive Shareable Link to Clone.",bot,update)
+        sendMessage("Provide G-Drive Shareable Link to Clone.", bot, update)
 
-clone_handler = CommandHandler(BotCommands.CloneCommand,cloneNode,filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
+
+clone_handler = CommandHandler(BotCommands.CloneCommand, cloneNode,
+                               filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
 dispatcher.add_handler(clone_handler)

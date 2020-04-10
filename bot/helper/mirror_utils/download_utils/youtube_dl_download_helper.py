@@ -39,7 +39,7 @@ class YoutubeDLHelper(DownloadHelper):
             'progress_hooks': [self.__onDownloadProgress],
             'logger': MyLogger(self),
             'usenetrc': True,
-            'format':"best"
+            'format': "best"
         }
         self.__download_speed = 0
         self.download_speed_readable = ''
@@ -76,7 +76,8 @@ class YoutubeDLHelper(DownloadHelper):
                     self.last_downloaded = d['total_bytes'] * progress
                     self.downloaded_bytes += chunk_size
                     try:
-                        self.progress = (self.downloaded_bytes / self.size) * 100
+                        self.progress = (
+                            self.downloaded_bytes / self.size) * 100
                     except ZeroDivisionError:
                         pass
                 else:
@@ -85,7 +86,8 @@ class YoutubeDLHelper(DownloadHelper):
 
     def __onDownloadStart(self):
         with download_dict_lock:
-            download_dict[self.__listener.uid] = YoutubeDLDownloadStatus(self, self.__listener)
+            download_dict[self.__listener.uid] = YoutubeDLDownloadStatus(
+                self, self.__listener)
 
     def __onDownloadComplete(self):
         self.__listener.onDownloadComplete()

@@ -16,7 +16,8 @@ if os.path.exists('log.txt'):
         f.truncate(0)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    handlers=[logging.FileHandler('log.txt'), logging.StreamHandler()],
+                    handlers=[logging.FileHandler(
+                        'log.txt'), logging.StreamHandler()],
                     level=logging.INFO)
 
 load_dotenv('config.env')
@@ -70,9 +71,11 @@ try:
     DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
     if DOWNLOAD_DIR[-1] != '/' or DOWNLOAD_DIR[-1] != '\\':
         DOWNLOAD_DIR = DOWNLOAD_DIR + '/'
-    DOWNLOAD_STATUS_UPDATE_INTERVAL = int(getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
+    DOWNLOAD_STATUS_UPDATE_INTERVAL = int(
+        getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
     OWNER_ID = int(getConfig('OWNER_ID'))
-    AUTO_DELETE_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_MESSAGE_DURATION'))
+    AUTO_DELETE_MESSAGE_DURATION = int(
+        getConfig('AUTO_DELETE_MESSAGE_DURATION'))
     USER_SESSION_STRING = getConfig('USER_SESSION_STRING')
     TELEGRAM_API = getConfig('TELEGRAM_API')
     TELEGRAM_HASH = getConfig('TELEGRAM_HASH')

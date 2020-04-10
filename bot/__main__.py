@@ -21,33 +21,32 @@ def stats(bot, update):
     free = get_readable_file_size(free)
     stats = f'Bot Uptime: {currentTime}\n' \
             f'Total disk space: {total}\n' \
-                        f'Used: {used}\n' \
-                        f'Free: {free}'
+        f'Used: {used}\n' \
+        f'Free: {free}'
     sendMessage(stats, bot, update)
 
 
-
 @run_async
-def start(bot,update):
+def start(bot, update):
     sendMessage("This is a bot which can mirror all your links to Google drive!\n"
                 "Type /help to get a list of available commands", bot, update)
 
 
 @run_async
-def ping(bot,update):
+def ping(bot, update):
     start_time = int(round(time.time() * 1000))
     reply = sendMessage("Starting Ping", bot, update)
     end_time = int(round(time.time()*1000))
-    editMessage(f'{end_time - start_time} ms',reply)
+    editMessage(f'{end_time - start_time} ms', reply)
 
 
 @run_async
-def log(bot,update):
+def log(bot, update):
     sendLogFile(bot, update)
 
 
 @run_async
-def bot_help(bot,update):
+def bot_help(bot, update):
     help_string = f'''
 /{BotCommands.HelpCommand}: To get this message
 
@@ -80,8 +79,9 @@ def main():
     help_handler = CommandHandler(BotCommands.HelpCommand,
                                   bot_help, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
     stats_handler = CommandHandler(BotCommands.StatsCommand,
-                                  stats, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
-    log_handler = CommandHandler(BotCommands.LogCommand, log, filters=CustomFilters.owner_filter)
+                                   stats, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user)
+    log_handler = CommandHandler(
+        BotCommands.LogCommand, log, filters=CustomFilters.owner_filter)
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(ping_handler)
     dispatcher.add_handler(help_handler)

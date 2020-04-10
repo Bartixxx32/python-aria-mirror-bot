@@ -77,7 +77,7 @@ class AriaDownloadStatus(Status):
 
     def download(self):
         return self.obj
-    
+
     def uid(self):
         return self.__uid
 

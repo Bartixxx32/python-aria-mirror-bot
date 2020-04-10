@@ -43,7 +43,8 @@ def direct_link_generator(link: str):
     elif 'androidfilehost.com' in link:
         return androidfilehost(link)
     else:
-        raise DirectDownloadLinkException(f'No Direct link function found for {link}')
+        raise DirectDownloadLinkException(
+            f'No Direct link function found for {link}')
 
 
 def gdrive(url: str) -> str:
@@ -122,7 +123,8 @@ def yandex_disk(url: str) -> str:
         dl_url = requests.get(api.format(link)).json()['href']
         return dl_url
     except KeyError:
-        raise DirectDownloadLinkException("`Error: File not found / Download limit reached`\n")
+        raise DirectDownloadLinkException(
+            "`Error: File not found / Download limit reached`\n")
 
 
 def mega_dl(url: str) -> str:
