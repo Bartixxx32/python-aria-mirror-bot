@@ -28,12 +28,10 @@ def stats(bot, update):
     total = get_readable_file_size(total)
     used = get_readable_file_size(used)
     free = get_readable_file_size(free)
-    stats = (
-        f"Bot Uptime: {currentTime}\n"
-        f"Total disk space: {total}\n"
-        f"Used: {used}\n"
-        f"Free: {free}"
-    )
+    stats = (f"Bot Uptime: {currentTime}\n"
+             f"Total disk space: {total}\n"
+             f"Used: {used}\n"
+             f"Free: {free}")
     sendMessage(stats, bot, update)
 
 
@@ -107,9 +105,9 @@ def main():
         stats,
         filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
     )
-    log_handler = CommandHandler(
-        BotCommands.LogCommand, log, filters=CustomFilters.owner_filter
-    )
+    log_handler = CommandHandler(BotCommands.LogCommand,
+                                 log,
+                                 filters=CustomFilters.owner_filter)
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(ping_handler)
     dispatcher.add_handler(help_handler)
