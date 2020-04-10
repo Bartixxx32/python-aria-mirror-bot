@@ -1,10 +1,14 @@
-import sys
-from bot import aria2, LOGGER, DOWNLOAD_DIR
-import shutil
 import os
 import pathlib
-import magic
+import shutil
+import sys
 import tarfile
+
+import magic
+
+from bot import aria2
+from bot import DOWNLOAD_DIR
+from bot import LOGGER
 
 
 def clean_download(path: str):

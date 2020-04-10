@@ -1,11 +1,10 @@
+import json
 import os
 import pickle
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
 
-import json
 import requests
-
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -14,7 +13,11 @@ from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 from tenacity import *
 
-from bot import parent_id, DOWNLOAD_DIR, IS_TEAM_DRIVE, INDEX_URL, USE_SERVICE_ACCOUNTS
+from bot import DOWNLOAD_DIR
+from bot import INDEX_URL
+from bot import IS_TEAM_DRIVE
+from bot import parent_id
+from bot import USE_SERVICE_ACCOUNTS
 from bot.helper.ext_utils.bot_utils import *
 from bot.helper.ext_utils.fs_utils import get_mime_type
 

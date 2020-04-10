@@ -1,15 +1,24 @@
 import shutil
 import signal
 
-from telegram.ext import CommandHandler, run_async
+from telegram.ext import CommandHandler
+from telegram.ext import run_async
 
-from bot import dispatcher, updater, botStartTime
+from .helper.ext_utils.bot_utils import get_readable_file_size
+from .helper.ext_utils.bot_utils import get_readable_time
+from .helper.telegram_helper.filters import CustomFilters
+from .modules import authorize
+from .modules import cancel_mirror
+from .modules import clone
+from .modules import list
+from .modules import mirror
+from .modules import mirror_status
+from bot import botStartTime
+from bot import dispatcher
+from bot import updater
 from bot.helper.ext_utils import fs_utils
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.message_utils import *
-from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time
-from .helper.telegram_helper.filters import CustomFilters
-from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone
 
 
 @run_async

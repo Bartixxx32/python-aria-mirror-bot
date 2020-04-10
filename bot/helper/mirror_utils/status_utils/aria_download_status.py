@@ -1,6 +1,7 @@
-from bot import aria2, DOWNLOAD_DIR
-from bot.helper.ext_utils.bot_utils import MirrorStatus
 from .status import Status
+from bot import aria2
+from bot import DOWNLOAD_DIR
+from bot.helper.ext_utils.bot_utils import MirrorStatus
 
 
 def get_download(gid):

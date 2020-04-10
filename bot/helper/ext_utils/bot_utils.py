@@ -3,7 +3,8 @@ import re
 import threading
 import time
 
-from bot import download_dict, download_dict_lock
+from bot import download_dict
+from bot import download_dict_lock
 
 LOGGER = logging.getLogger(__name__)
 

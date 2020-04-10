@@ -1,16 +1,18 @@
 from __future__ import print_function
-from google.oauth2.service_account import Credentials
-import googleapiclient.discovery
-import json
-import progress.bar
-import glob
-import sys
+
 import argparse
-import time
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
+import glob
+import json
 import os
 import pickle
+import sys
+import time
+
+import googleapiclient.discovery
+import progress.bar
+from google.auth.transport.requests import Request
+from google.oauth2.service_account import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 
 stt = time.time()
 

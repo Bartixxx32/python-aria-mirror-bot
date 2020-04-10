@@ -1,16 +1,16 @@
+import time
+
+from telegram.error import BadRequest
+from telegram.error import TimedOut
 from telegram.message import Message
 from telegram.update import Update
-import time
-from bot import (
-    AUTO_DELETE_MESSAGE_DURATION,
-    LOGGER,
-    bot,
-    status_reply_dict,
-    status_reply_dict_lock,
-)
-from bot.helper.ext_utils.bot_utils import get_readable_message
-from telegram.error import TimedOut, BadRequest
+
+from bot import AUTO_DELETE_MESSAGE_DURATION
 from bot import bot
+from bot import LOGGER
+from bot import status_reply_dict
+from bot import status_reply_dict_lock
+from bot.helper.ext_utils.bot_utils import get_readable_message
 
 
 def sendMessage(text: str, bot, update: Update):

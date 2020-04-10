@@ -4,16 +4,14 @@ import time
 
 from pyrogram import Client
 
-from bot import (
-    LOGGER,
-    download_dict,
-    download_dict_lock,
-    TELEGRAM_API,
-    TELEGRAM_HASH,
-    USER_SESSION_STRING,
-)
-from .download_helper import DownloadHelper
 from ..status_utils.telegram_download_status import TelegramDownloadStatus
+from .download_helper import DownloadHelper
+from bot import download_dict
+from bot import download_dict_lock
+from bot import LOGGER
+from bot import TELEGRAM_API
+from bot import TELEGRAM_HASH
+from bot import USER_SESSION_STRING
 
 global_lock = threading.Lock()
 GLOBAL_GID = set()
