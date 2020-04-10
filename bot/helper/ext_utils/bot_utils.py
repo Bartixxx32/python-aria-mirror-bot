@@ -21,7 +21,7 @@ class MirrorStatus:
 
 
 PROGRESS_MAX_SIZE = 100 // 8
-PROGRESS_INCOMPLETE = ['▏', '▎', '▍', '▌', '▋', '▊', '▉']
+PROGRESS_INCOMPLETE = ['⣀', '⣀', '⣀', '⣀', '⣦', '⣦', '⣦']
 
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
@@ -65,7 +65,7 @@ def get_progress_bar_string(status):
     p = min(max(p, 0), 100)
     cFull = p // 8
     cPart = p % 8 - 1
-    p_str = '█' * cFull
+    p_str = '⣿' * cFull
     if cPart >= 0:
         p_str += PROGRESS_INCOMPLETE[cPart]
     p_str += ' ' * (PROGRESS_MAX_SIZE - cFull)
@@ -85,18 +85,21 @@ def get_readable_message():
     with download_dict_lock:
         msg = ""
         for download in list(download_dict.values()):
-            msg += f"<i>{download.name()}</i> - "
+            msg += f"<i>{download.name()}</i>\n"
             msg += download.status()
             if download.status() != MirrorStatus.STATUS_ARCHIVING:
-                msg += f"\n<code>{get_progress_bar_string(download)} {download.progress()}</code> of " \
-                    f"{download.size()}" \
-                    f" at {download.speed()}, ETA: {download.eta()} "
+                msg += f"\n<code>{get_progress_bar_string(download)}\n" \
+                       f"{download.progress()}</code> of " \
+                    f"{download.size()}\n" \
+                    f"Speed: {download.speed()}\n" \
+                    f"ETA: {download.eta()}\n"
             if download.status() == MirrorStatus.STATUS_DOWNLOADING:
-                if hasattr(download, 'is_torrent'):
-                    msg += f"| P: {download.download().connections} " \
-                           f"| S: {download.download().num_seeders}"
+                if hasattr(download,'is_torrent'):
+                    msg += f"Peers: {download.download().connections}\n" \
+                           f"Seeders: {download.download().num_seeders}\n"
             msg += "\n\n"
         return msg
+
 
 
 def get_readable_time(seconds: int) -> str:

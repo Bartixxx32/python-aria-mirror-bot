@@ -97,7 +97,7 @@ class MirrorListener(listeners.MirrorListeners):
                 share_url = share_url.replace(' ', '%20')
                 if os.path.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
                     share_url += '/'
-                msg += f'\n\n Shareable link: <a href="{share_url}">here</a>'
+                msg += f'\n\n Direct link: <a href="{share_url}">here</a>'
             try:
                 fs_utils.clean_download(download_dict[self.uid].path())
             except FileNotFoundError:
