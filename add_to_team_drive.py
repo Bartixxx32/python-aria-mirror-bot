@@ -17,8 +17,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 stt = time.time()
 
 parse = argparse.ArgumentParser(
-    description=
-    "A tool to add service accounts to a shared drive from a folder containing credential files."
+    description="A tool to add service accounts to a shared drive from a folder containing credential files."
 )
 parse.add_argument(
     "--path",

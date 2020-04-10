@@ -221,8 +221,7 @@ def serviceaccountfactory(
                     "PERMISSION_DENIED"):
                 try:
                     serviceusage.services().enable(
-                        name=
-                        "projects/%s/services/cloudresourcemanager.googleapis.com"
+                        name="projects/%s/services/cloudresourcemanager.googleapis.com"
                         % proj_id).execute()
                 except HttpError as e:
                     print(e._get_reason())
@@ -342,8 +341,7 @@ if __name__ == "__main__":
         "--services",
         nargs="+",
         default=["iam", "drive"],
-        help=
-        "Specify a different set of services to enable. Overrides the default.",
+        help="Specify a different set of services to enable. Overrides the default.",
     )
     parse.add_argument("--create-sas",
                        default=None,
@@ -360,8 +358,7 @@ if __name__ == "__main__":
         "--quick-setup",
         default=None,
         type=int,
-        help=
-        "Create projects, enable services, create service accounts and download keys. ",
+        help="Create projects, enable services, create service accounts and download keys. ",
     )
     parse.add_argument(
         "--new-only",
