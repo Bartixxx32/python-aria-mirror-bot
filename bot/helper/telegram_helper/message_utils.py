@@ -1,24 +1,35 @@
+import time
+
+from telegram.error import BadRequest
+from telegram.error import TimedOut
 from telegram.message import Message
 from telegram.update import Update
-import time
-from bot import AUTO_DELETE_MESSAGE_DURATION, LOGGER, bot, \
-    status_reply_dict, status_reply_dict_lock, download_dict_lock, download_dict
-from bot.helper.ext_utils.bot_utils import get_readable_message
-from telegram.error import TimedOut, BadRequest
+
+from bot import AUTO_DELETE_MESSAGE_DURATION
 from bot import bot
+from bot import LOGGER
+from bot import status_reply_dict
+from bot import status_reply_dict_lock
+from bot.helper.ext_utils.bot_utils import get_readable_message
 
 
 def sendMessage(text: str, bot, update: Update):
-    return bot.send_message(update.message.chat_id,
-                            reply_to_message_id=update.message.message_id,
-                            text=text, parse_mode='HTMl')
+    return bot.send_message(
+        update.message.chat_id,
+        reply_to_message_id=update.message.message_id,
+        text=text,
+        parse_mode="HTMl",
+    )
 
 
 def editMessage(text: str, message: Message):
     try:
-        bot.edit_message_text(text=text, message_id=message.message_id,
-                              chat_id=message.chat.id,
-                              parse_mode='HTMl')
+        bot.edit_message_text(
+            text=text,
+            message_id=message.message_id,
+            chat_id=message.chat.id,
+            parse_mode="HTMl",
+        )
     except TimedOut as e:
         LOGGER.error(str(e))
         pass
@@ -33,10 +44,13 @@ def deleteMessage(bot, message: Message):
 
 
 def sendLogFile(bot, update: Update):
-    with open('log.txt', 'rb') as f:
-        bot.send_document(document=f, filename=f.name,
-                          reply_to_message_id=update.message.message_id,
-                          chat_id=update.message.chat_id)
+    with open("log.txt", "rb") as f:
+        bot.send_document(
+            document=f,
+            filename=f.name,
+            reply_to_message_id=update.message.message_id,
+            chat_id=update.message.chat_id,
+        )
 
 
 def auto_delete_message(bot, cmd_message: Message, bot_message: Message):
