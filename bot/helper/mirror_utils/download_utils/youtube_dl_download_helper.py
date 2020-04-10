@@ -79,7 +79,8 @@ class YoutubeDLHelper(DownloadHelper):
                     self.last_downloaded = d["total_bytes"] * progress
                     self.downloaded_bytes += chunk_size
                     try:
-                        self.progress = (self.downloaded_bytes / self.size) * 100
+                        self.progress = (self.downloaded_bytes /
+                                         self.size) * 100
                     except ZeroDivisionError:
                         pass
                 else:
@@ -89,8 +90,7 @@ class YoutubeDLHelper(DownloadHelper):
     def __onDownloadStart(self):
         with download_dict_lock:
             download_dict[self.__listener.uid] = YoutubeDLDownloadStatus(
-                self, self.__listener
-            )
+                self, self.__listener)
 
     def __onDownloadComplete(self):
         self.__listener.onDownloadComplete()
@@ -142,7 +142,7 @@ class YoutubeDLHelper(DownloadHelper):
             self.opts["outtmpl"] = f"{path}/{self.name}/%(title)s.%(ext)s"
 
         self.__onDownloadStart()
-        threading.Thread(target=self.__download, args=(link,)).start()
+        threading.Thread(target=self.__download, args=(link, )).start()
 
     def cancel_download(self):
         self.is_cancelled = True

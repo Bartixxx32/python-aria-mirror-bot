@@ -42,7 +42,8 @@ def direct_link_generator(link: str):
     elif "androidfilehost.com" in link:
         return androidfilehost(link)
     else:
-        raise DirectDownloadLinkException(f"No Direct link function found for {link}")
+        raise DirectDownloadLinkException(
+            f"No Direct link function found for {link}")
 
 
 def gdrive(url: str) -> str:
@@ -72,9 +73,10 @@ def gdrive(url: str) -> str:
         # In case of download warning page
         page = BeautifulSoup(download.content, "lxml")
         export = drive + page.find("a", {"id": "uc-download-link"}).get("href")
-        response = requests.get(
-            export, stream=True, allow_redirects=False, cookies=cookies
-        )
+        response = requests.get(export,
+                                stream=True,
+                                allow_redirects=False,
+                                cookies=cookies)
         dl_url = response.headers["location"]
         if "accounts.google.com" in dl_url:
             raise DirectDownloadLinkException("`Link not public`")
@@ -96,12 +98,10 @@ def zippy_share(url: str) -> str:
     scripts = page_soup.find_all("script", {"type": "text/javascript"})
     for script in scripts:
         if "getElementById('dlbutton')" in script.text:
-            url_raw = re.search(
-                r"= (?P<url>\".+\" \+ (?P<math>\(.+\)) .+);", script.text
-            ).group("url")
-            math = re.search(
-                r"= (?P<url>\".+\" \+ (?P<math>\(.+\)) .+);", script.text
-            ).group("math")
+            url_raw = re.search(r"= (?P<url>\".+\" \+ (?P<math>\(.+\)) .+);",
+                                script.text).group("url")
+            math = re.search(r"= (?P<url>\".+\" \+ (?P<math>\(.+\)) .+);",
+                             script.text).group("math")
             dl_url = url_raw.replace(math, '"' + str(eval(math)) + '"')
             break
     dl_url = base_url + eval(dl_url)
@@ -123,8 +123,7 @@ def yandex_disk(url: str) -> str:
         return dl_url
     except KeyError:
         raise DirectDownloadLinkException(
-            "`Error: File not found / Download limit reached`\n"
-        )
+            "`Error: File not found / Download limit reached`\n")
 
 
 def mega_dl(url: str) -> str:
@@ -182,7 +181,8 @@ def osdn(url: str) -> str:
         link = re.findall(r"\bhttps?://.*osdn\.net\S+", url)[0]
     except IndexError:
         raise DirectDownloadLinkException("`No OSDN links found`\n")
-    page = BeautifulSoup(requests.get(link, allow_redirects=True).content, "lxml")
+    page = BeautifulSoup(
+        requests.get(link, allow_redirects=True).content, "lxml")
     info = page.find("a", {"class": "mirror_link"})
     link = urllib.parse.unquote(osdn_link + info["href"])
     mirrors = page.find("form", {"id": "mirror-select-form"}).findAll("tr")
@@ -230,7 +230,11 @@ def androidfilehost(url: str) -> str:
         "authority": "androidfilehost.com",
         "x-requested-with": "XMLHttpRequest",
     }
-    data = {"submit": "submit", "action": "getdownloadmirrors", "fid": f"{fid}"}
+    data = {
+        "submit": "submit",
+        "action": "getdownloadmirrors",
+        "fid": f"{fid}"
+    }
     error = "`Error: Can't find Mirrors for the link`\n"
     try:
         req = session.post(
@@ -254,8 +258,7 @@ def useragent():
     useragents = BeautifulSoup(
         requests.get(
             "https://developers.whatismybrowser.com/"
-            "useragents/explore/operating_system_name/android/"
-        ).content,
+            "useragents/explore/operating_system_name/android/").content,
         "lxml",
     ).findAll("td", {"class": "useragent"})
     user_agent = choice(useragents)
